@@ -596,7 +596,6 @@ export function REPL({
   sshSession,
   thinkingConfig
 }: Props): React.ReactNode {
-  logForDebugging('[REPL:render] function entry');
   const isRemoteSession = !!remoteSessionConfig;
 
   // Env-var gates hoisted to mount-time — isEnvTruthy does toLowerCase+trim+
@@ -607,12 +606,6 @@ export function REPL({
   const disableMessageActions = feature('MESSAGE_ACTIONS') ?
   // biome-ignore lint/correctness/useHookAtTopLevel: feature() is a compile-time constant
   useMemo(() => isEnvTruthy(process.env.CLAUDE_CODE_DISABLE_MESSAGE_ACTIONS), []) : false;
-
-  // Log REPL mount/unmount lifecycle
-  useEffect(() => {
-    logForDebugging(`[REPL:mount] REPL mounted, disabled=${disabled}`);
-    return () => logForDebugging(`[REPL:unmount] REPL unmounting`);
-  }, [disabled]);
 
   // Agent definition is state so /resume can update it mid-session
   const [mainThreadAgentDefinition, setMainThreadAgentDefinition] = useState(initialMainThreadAgentDefinition);

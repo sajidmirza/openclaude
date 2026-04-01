@@ -232,7 +232,7 @@ const reconciler = createReconciler<
   unknown,
   DOMElement,
   HostContext,
-  null, // UpdatePayload - not used in React 19
+  boolean,
   NodeJS.Timeout,
   -1,
   null
@@ -398,6 +398,14 @@ const reconciler = createReconciler<
   ): boolean {
     return props['autoFocus'] === true
   },
+  prepareUpdate(
+    _node: DOMElement,
+    _type: ElementNames,
+    oldProps: Props,
+    newProps: Props,
+  ): boolean {
+    return oldProps !== newProps
+  },
   commitMount(node: DOMElement): void {
     getFocusManager(node).handleAutoFocus(node)
   },
@@ -422,9 +430,9 @@ const reconciler = createReconciler<
     cleanupYogaNode(removeNode)
     getFocusManager(node).handleNodeRemoved(removeNode, node)
   },
-  // React 19 commitUpdate receives old and new props directly instead of an updatePayload
   commitUpdate(
     node: DOMElement,
+    _updatePayload: boolean,
     _type: ElementNames,
     oldProps: Props,
     newProps: Props,
